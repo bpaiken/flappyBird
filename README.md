@@ -16,7 +16,7 @@ When Pigs Fly is a side scroller where you attempt to navigate a flying pig thro
 
 ### Wireframe
 
-![alt text](https://github.com/bpaiken/WhenPigsFly/blob/master/assets/images/wireframe.png)
+![alt text](https://github.com/bpaiken/whenPigsFly/blob/master/assets/images/wireframe.png)
 
 ### Architecture and Technologies
 
