@@ -14,6 +14,10 @@ When Pigs Fly is a side scroller where you attempt to navigate a flying pig thro
 
 * (Bonus): Saving scores via backend database
 
+### Wireframe
+
+![alt text](https://github.com/bpaiken/WhenPigsFly/blob/master/assets/images/wireframe.png)
+
 ### Architecture and Technologies
 
 * JavaScript: game logic
