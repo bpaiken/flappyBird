@@ -14,7 +14,9 @@ let flap = 0;
 let birdRotation = 0;
 let pipeGap = 240;
 let pipeDelay = 120;
-
+let collision = false;
+let birdWidth = 92
+let birdHeight = 64
 
 
 
@@ -138,6 +140,18 @@ function startGame() {
     //   background.x = 0
     // }
 
+    for (var i = 0; i < pipes.children.length; i++) {
+        // collision = ndgmr.checkPixelCollision(bird, pipes,1,true)
+        // collision = bird.hitTest(pipes.children[0])
+        // collision = checkCollision(bird, pipes.children[i])
+        if (collision) {
+          console.log('collision!')
+        }
+    }
+
+    // if (ndgmr.checkPixelCollision(bird, pipe1)) {
+    //   console.log('collision')
+    // }
 
     stage.update(event);
   })
@@ -182,14 +196,16 @@ function randomGap(pipe1, pipe2) {
   pipe2.y = pipe1.y - pipeGap - (h/100);
 }
 
+function checkCollision(sprite, pipe) {
+  if (
+      sprite.x < pipe.x + pipe.image.width &&
+      sprite.x + birdWidth > pipe.x &&
+      sprite.y < pipe.y + pipe.image.height &&
+      sprite.y + birdHeight > pipe.y
+    ) return true;
+  return false;
+}
 
 document.addEventListener('DOMContentLoaded',() => {
   init()
 })
-
-
-
-// // one sprite 
-//   initial animation
-//   jump animations 
-//   death animation

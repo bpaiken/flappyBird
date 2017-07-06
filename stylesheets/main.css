@@ -1,0 +1,46 @@
+body {
+  display: flex;
+  justify-content: flex-start;
+}
+
+canvas {
+  max-height: 100vh;
+  max-width: 100%;
+  margin: 0 0 0 auto;
+}
+
+.social-links {
+  margin: auto 0;
+  display: flex;
+  flex-direction: column;
+  margin-right: auto;
+}
+
+.social-links > a {
+  width: 180px;
+  height: 60px;
+  margin: 10px 0;
+}
+
+#github-img {
+  width: 160px;
+  height: auto;
+  margin-left: 40px;
+}
+
+#linkedin-img {
+  width: 115px;
+  margin-left: 64px;
+}
+
+#email {
+  margin-left: 80px;
+}
+
+#github-img:hover {
+  width: 170px;
+}
+
+#linkedin-img:hover {
+  width: 125px;
+}

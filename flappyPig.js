@@ -101,6 +101,9 @@ var flap = 0;
 var birdRotation = 0;
 var pipeGap = 240;
 var pipeDelay = 120;
+var collision = false;
+var birdWidth = 92;
+var birdHeight = 64;
 
 function init() {
   backgroundImg.onload = onImageLoaded;
@@ -196,12 +199,12 @@ function startGame() {
       pipe.x -= 3;
     });
 
-    for (var i = 0; i < pipes.children.length; i++) {
-      if (i % 2 === 1) continue;
-      if (pipes.children[i].x === -pipeImg.width) {
-        randomGap(pipes.children[i], pipes.children[i + 1]);
-        pipes.children[i].x = w + 300;
-        pipes.children[i + 1].x = w + 300;
+    for (var _i = 0; _i < pipes.children.length; _i++) {
+      if (_i % 2 === 1) continue;
+      if (pipes.children[_i].x === -pipeImg.width) {
+        randomGap(pipes.children[_i], pipes.children[_i + 1]);
+        pipes.children[_i].x = w + 300;
+        pipes.children[_i + 1].x = w + 300;
       }
     }
 
@@ -211,6 +214,18 @@ function startGame() {
     //   background.x = 0
     // }
 
+    for (var i = 0; i < pipes.children.length; i++) {
+      // collision = ndgmr.checkPixelCollision(bird, pipes,1,true)
+      // collision = bird.hitTest(pipes.children[0])
+      // collision = checkCollision(bird, pipes.children[i])
+      if (collision) {
+        console.log('collision!');
+      }
+    }
+
+    // if (ndgmr.checkPixelCollision(bird, pipe1)) {
+    //   console.log('collision')
+    // }
 
     stage.update(event);
   });
@@ -254,14 +269,14 @@ function randomGap(pipe1, pipe2) {
   pipe2.y = pipe1.y - pipeGap - h / 100;
 }
 
+function checkCollision(sprite, pipe) {
+  if (sprite.x < pipe.x + pipe.image.width && sprite.x + birdWidth > pipe.x && sprite.y < pipe.y + pipe.image.height && sprite.y + birdHeight > pipe.y) return true;
+  return false;
+}
+
 document.addEventListener('DOMContentLoaded', function () {
   init();
 });
-
-// // one sprite 
-//   initial animation
-//   jump animations 
-//   death animation
 
 /***/ }),
 /* 1 */
