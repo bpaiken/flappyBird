@@ -5,13 +5,16 @@ let birdImg = new Image();
 let groundImg = new Image();
 let pipeImg = new Image();
 
-let stage, bird, ground, background, pipe, pipe2, pipes;
+let stage, bird, ground, background, pipes, newPipes;
+let pipe1, pipe2, pipe3, pipe4, pipe5, pipe6;
 
 let w = 768;
 let h = 1024;
 let flap = 0;
 let birdRotation = 0;
 let pipeGap = 240;
+let pipeDelay = 120;
+
 
 
 
@@ -60,22 +63,9 @@ function startGame() {
     },
   });
 
-  pipe = new createjs.Bitmap(pipeImg);
-  pipe.x = w - 300;
-  pipe.y = ground.y - groundImg.height;
+  
 
-  pipe2 = new createjs.Bitmap(pipeImg);
-  pipe2.x = w - 300;
-  pipe2.y = pipe.y - pipeGap;
-  // pipe2.rotation = 180
-  // pipe2.regX = pipeImg.width / 2;
-  // pipe2.regY = pipeImg.height / 2;
-  pipe2.scaleY = -1;
 
-  pipes = new createjs.Container();
-  pipes.addChild(pipe);
-  pipes.addChild(pipe2);
- 
  
   let bird = new createjs.Sprite(birdSheet, 'fly');
   bird.name = "bird";
@@ -93,6 +83,9 @@ function startGame() {
   .to({y:centerY + flyDelta}, 380, createjs.Ease.sineInOut)
   .to({y:centerY}, 380, createjs.Ease.sineInOut);
 
+  let pipeArr = renderPipes()
+  pipes = new createjs.Container();
+  pipeArr.forEach(pipe => pipes.addChild(pipe));
 
   stage.addChild(background);
   stage.addChild(bird, pipes, ground);
@@ -113,15 +106,30 @@ function startGame() {
   ticker.addEventListener('tick', (event) => {
     
     
-    ground.x -= 2;
+    ground.x -= 3;
     if (ground.x <= groundImg.width * -1) {
       ground.x = 0
     }
+
 
     bird.y += 10
     bird.y -= flap
     if (flap > 0) {
       flap = flap * .9;
+    }
+
+    pipes.children.forEach(pipe => {
+      pipe.x -= 3;
+    })
+
+    for (let i = 0; i < pipes.children.length; i++) {
+      if (i % 2 === 1) continue;
+      if (pipes.children[i].x === -pipeImg.width) {
+        randomGap(pipes.children[i], pipes.children[i+1]);
+        pipes.children[i].x = w + 300;
+        pipes.children[i+1].x = w + 300;
+      }
+      
     }
 
     // current background image is does not repeat well
@@ -131,11 +139,48 @@ function startGame() {
     // }
 
 
-
     stage.update(event);
   })
+
 }
 
+function renderPipes() {
+
+  pipe1 = new createjs.Bitmap(pipeImg);
+  pipe1.x = w + 300;
+  pipe1.y = ground.y - groundImg.height
+
+  pipe2 = new createjs.Bitmap(pipeImg);
+  pipe2.x = w + 300;
+  pipe2.y = pipe1.y - pipeGap
+  pipe2.scaleY = -1;
+
+  pipe3 = new createjs.Bitmap(pipeImg);
+  pipe3.x = w + 684;
+  pipe3.y = ground.y - groundImg.height;
+
+  pipe4 = new createjs.Bitmap(pipeImg);
+  pipe4.x = w + 684;
+  pipe4.y = pipe3.y - pipeGap;
+  pipe4.scaleY = -1;
+
+  pipe5 = new createjs.Bitmap(pipeImg);
+  pipe5.x = w + 1068;
+  pipe5.y = ground.y - groundImg.height;
+
+  pipe6 = new createjs.Bitmap(pipeImg);
+  pipe6.x = w + 1068;
+  pipe6.y = pipe5.y - pipeGap;
+  pipe6.scaleY = -1;
+
+  return [pipe1, pipe2, pipe3, pipe4, pipe5, pipe6]
+}
+
+function randomGap(pipe1, pipe2) {
+  let h = Math.random() * 400;
+  pipe1.y = ground.y - groundImg.height - h;
+  pipe2.y = pipe1.y - pipeGap - (h/100);
+}
 
 
 document.addEventListener('DOMContentLoaded',() => {
