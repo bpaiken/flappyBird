@@ -2,10 +2,10 @@ var path = require("path");
 
 module.exports = {
   context: __dirname,
-  entry: "./lib/main.js",
+  entry: "./js/main.js",
   output: {
     path: path.resolve(__dirname),
-    filename: "whenPigsFly.js"
+    filename: "flappyPig.js"
   },
   module: {
     loaders: [

@@ -1,6 +1,6 @@
-# When Pigs Fly
+# FlappyPig
 
-When Pigs Fly is a side scroller where you attempt to navigate a flying pig through various obstacles.
+FlappyPig is a side scroller where you attempt to navigate a flying pig through various obstacles.
 
 ### MVP
 

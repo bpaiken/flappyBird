@@ -1,22 +1,22 @@
 {
-  "name": "whenPigsFly",
+  "name": "flappyPig",
   "version": "1.0.0",
-  "description": "When Pigs Fly is a side scroller where you attempt to navigate a flying pig through various obstacles.",
+  "description": "FlappyPig is a side scroller where you attempt to navigate a flying pig through various obstacles.",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/bpaiken/whenPigsFly.git"
+    "url": "git+https://github.com/bpaiken/flappyPig.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/bpaiken/whenPigsFly/issues"
+    "url": "https://github.com/bpaiken/flappyPig/issues"
   },
-  "homepage": "https://github.com/bpaiken/whenPigsFly#readme",
+  "homepage": "https://github.com/bpaiken/flappyPig#readme",
   "dependencies": {
     "babel-core": "^6.25.0",
     "babel-loader": "^7.1.1",
