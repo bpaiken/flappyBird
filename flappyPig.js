@@ -87,12 +87,14 @@ var stage = void 0,
     ground = void 0,
     background = void 0,
     pipe = void 0,
+    pipe2 = void 0,
     pipes = void 0;
 
 var w = 768;
 var h = 1024;
 var flap = 0;
 var birdRotation = 0;
+var pipeGap = 240;
 
 function init() {
   backgroundImg.onload = onImageLoaded;
@@ -139,10 +141,19 @@ function startGame() {
 
   pipe = new createjs.Bitmap(pipeImg);
   pipe.x = w - 300;
-  pipe.y = background.height;
+  pipe.y = ground.y - groundImg.height;
+
+  pipe2 = new createjs.Bitmap(pipeImg);
+  pipe2.x = w - 300;
+  pipe2.y = pipe.y - pipeGap;
+  // pipe2.rotation = 180
+  // pipe2.regX = pipeImg.width / 2;
+  // pipe2.regY = pipeImg.height / 2;
+  pipe2.scaleY = -1;
 
   pipes = new createjs.Container();
   pipes.addChild(pipe);
+  pipes.addChild(pipe2);
 
   var bird = new createjs.Sprite(birdSheet, 'fly');
   bird.name = "bird";
@@ -159,7 +170,7 @@ function startGame() {
   createjs.Tween.get(bird, { loop: true }).to({ y: centerY + flyDelta }, 380, createjs.Ease.sineInOut).to({ y: centerY }, 380, createjs.Ease.sineInOut);
 
   stage.addChild(background);
-  stage.addChild(bird, ground, pipes);
+  stage.addChild(bird, pipes, ground);
 
   function doFlap() {
     flap = 36;

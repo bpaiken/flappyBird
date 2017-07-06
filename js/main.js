@@ -5,12 +5,13 @@ let birdImg = new Image();
 let groundImg = new Image();
 let pipeImg = new Image();
 
-let stage, bird, ground, background, pipe, pipes;
+let stage, bird, ground, background, pipe, pipe2, pipes;
 
 let w = 768;
 let h = 1024;
 let flap = 0;
 let birdRotation = 0;
+let pipeGap = 240;
 
 
 
@@ -61,10 +62,19 @@ function startGame() {
 
   pipe = new createjs.Bitmap(pipeImg);
   pipe.x = w - 300;
-  pipe.y = background.height
+  pipe.y = ground.y - groundImg.height;
+
+  pipe2 = new createjs.Bitmap(pipeImg);
+  pipe2.x = w - 300;
+  pipe2.y = pipe.y - pipeGap;
+  // pipe2.rotation = 180
+  // pipe2.regX = pipeImg.width / 2;
+  // pipe2.regY = pipeImg.height / 2;
+  pipe2.scaleY = -1;
 
   pipes = new createjs.Container();
   pipes.addChild(pipe);
+  pipes.addChild(pipe2);
  
  
   let bird = new createjs.Sprite(birdSheet, 'fly');
@@ -85,7 +95,7 @@ function startGame() {
 
 
   stage.addChild(background);
-  stage.addChild(bird, ground, pipes);
+  stage.addChild(bird, pipes, ground);
  
 
   function doFlap() {
