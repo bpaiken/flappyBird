@@ -163,7 +163,6 @@ function startGame() {
       ground.x = 0
     }
 
-
     bird.y += 10
     bird.y -= flap
     if (flap > 0) {
@@ -213,8 +212,6 @@ function startGame() {
         bird.y += 10;
     }
   }
-
-
     stage.update(event);
   })
 
@@ -229,42 +226,40 @@ function restart(stage, bird) {
   startGame()
 }
 
-function renderPipes() {
-  pipe1 = new createjs.Bitmap(pipeImg);
-  pipe1.x = w + 300;
-  pipe1.y = ground.y - groundImg.height
-    
-  pipe2 = new createjs.Bitmap(pipeImg);
-  pipe2.x = w + 300;
-  pipe2.y = pipe1.y - pipeGap
-  pipe2.scaleY = -1;
-
-  pipe3 = new createjs.Bitmap(pipeImg);
-  pipe3.x = w + 684;
-  pipe3.y = ground.y - groundImg.height;
-
-  pipe4 = new createjs.Bitmap(pipeImg);
-  pipe4.x = w + 684;
-  pipe4.y = pipe3.y - pipeGap;
-  pipe4.scaleY = -1;
-
-  pipe5 = new createjs.Bitmap(pipeImg);
-  pipe5.x = w + 1068;
-  pipe5.y = ground.y - groundImg.height;
-
-  pipe6 = new createjs.Bitmap(pipeImg);
-  pipe6.x = w + 1068;
-  pipe6.y = pipe5.y - pipeGap;
-  pipe6.scaleY = -1;
-
-  return [pipe1, pipe2, pipe3, pipe4, pipe5, pipe6]
-}
-
 function randomGap(pipe1, pipe2) {
   let h = Math.random() * 400;
   pipe1.y = ground.y - groundImg.height - h;
   pipe2.y = pipe1.y - pipeGap - (h/100);
 }
+
+function renderPipes() {
+  pipe1 = new createjs.Bitmap(pipeImg);
+  pipe1.x = w + 300;
+    
+  pipe2 = new createjs.Bitmap(pipeImg);
+  pipe2.x = w + 300;
+  pipe2.scaleY = -1;
+  randomGap(pipe1, pipe2);
+
+  pipe3 = new createjs.Bitmap(pipeImg);
+  pipe3.x = w + 684;
+
+  pipe4 = new createjs.Bitmap(pipeImg);
+  pipe4.x = w + 684;
+  pipe4.scaleY = -1;
+  randomGap(pipe3, pipe4);
+
+  pipe5 = new createjs.Bitmap(pipeImg);
+  pipe5.x = w + 1068;
+
+  pipe6 = new createjs.Bitmap(pipeImg);
+  pipe6.x = w + 1068;
+  pipe6.scaleY = -1;
+  randomGap(pipe5, pipe6);
+
+  return [pipe1, pipe2, pipe3, pipe4, pipe5, pipe6]
+}
+
 
 function checkTopCollision(bird, pipe) {
   if (
@@ -300,28 +295,6 @@ function die(bird,stage) {
   }
 }
 
-
-
-
-
-
-
-
-
-
 document.addEventListener('DOMContentLoaded',() => {
   init()
 })
-
-
-
-
-
-// x -------->
-// y
-// |
-// |
-// |
-// | 
-// v
-//
