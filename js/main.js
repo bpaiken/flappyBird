@@ -4,8 +4,10 @@ let backgroundImg = new Image();
 let birdImg = new Image();
 let groundImg = new Image();
 let pipeImg = new Image();
+let resetImg = new Image();
 
-let stage, bird, ground, background, pipes, newPipes, counter, counterOutline, score;
+let stage, bird, ground, background, pipes, newPipes, scoreText;
+let reset;
 let pipe1, pipe2, pipe3, pipe4, pipe5, pipe6;
 
 let w = 768;
@@ -15,9 +17,10 @@ let birdRotation = 0;
 let pipeGap = 260;
 let pipeDelay = 120;
 let collision = false;
-let birdWidth = 92
-let birdHeight = 64
+let birdWidth = 40
+let birdHeight = 32
 let alive = true;
+let score = 0
 
 window.pipes = pipes
 window.bird = bird
@@ -36,13 +39,16 @@ function init() {
 
   birdImg.onload = onImageLoaded;
   birdImg.src = 'assets/images/bird.png';
+
+  resetImg.onload = onImageLoaded
+  resetImg.src = 'assets/images/reset.png'
 }
 
 
 function onImageLoaded(e) {
   numberOfImagesLoaded++;
 
-  if (numberOfImagesLoaded === 4) {
+  if (numberOfImagesLoaded === 5) {
     numberOfImagesLoaded = 0
     startGame();
   }
@@ -51,12 +57,10 @@ function onImageLoaded(e) {
 function startGame() {
   let stage = new createjs.Stage('myCanvas');
 
-  // let backgroundBit = new createjs.Bitmap(background);
-
   background = new createjs.Shape();
   background.graphics.beginBitmapFill(backgroundImg).drawRect(0, 0, w + backgroundImg.width, backgroundImg.height)
   
-  
+
   ground = new createjs.Shape();
   ground.graphics.beginBitmapFill(groundImg).drawRect(0, 0, w + groundImg.width, groundImg.height)
   ground.y = h-groundImg.height;
@@ -72,8 +76,6 @@ function startGame() {
 
   let bird = new createjs.Sprite(birdSheet, 'fly');
   bird.name = "bird";
-  bird.regX = 46;
-  bird.regY = 32;
 
   let centerX = w/2 - 92/2
   let centerY = 412
@@ -86,13 +88,37 @@ function startGame() {
   .to({y:centerY + flyDelta}, 380, createjs.Ease.sineInOut)
   .to({y:centerY}, 380, createjs.Ease.sineInOut);
 
+  bird.regX = 46;
+  bird.regY = 32;
+
+  reset = new createjs.Shape();
+  reset.graphics.beginBitmapFill(resetImg).drawRect(0, 0, resetImg.width, resetImg.height);
+  reset.scaleY = 0.75
+  reset.scaleX = 0.75
+  reset.x = (w / 2) - (resetImg.width / 2 * .75)
+  reset.y = (h / 2) - (resetImg.height / 2 * .75)
+  reset.addEventListener('click', restart.bind(null, stage, bird))
+
+  var hit = new createjs.Shape();
+  hit.graphics.beginFill("#000").drawRect(0, 0, resetImg.width, resetImg.width)
+  hit.scaleX = 0.75
+  hit.scaleY = 0.75
+  reset.hitArea = hit
+
+
   let pipeArr = renderPipes()
   pipes = new createjs.Container();
   pipeArr.forEach(pipe => pipes.addChild(pipe));
 
   stage.addChild(background)
-  stage.addChild(bird, pipes, ground, score, counter);
+  stage.addChild(pipes, bird, ground);
  
+  scoreText = new createjs.Text("0", "bold 56px 'Press Start 2P'", "#DAA520");
+  scoreText.x = centerX
+  scoreText.y = 100
+
+  stage.addChild(scoreText);
+  stage.update();
 
   function doFlap() {
     flap = 36;
@@ -102,14 +128,13 @@ function startGame() {
   function handleKeyDown(e) {
   createjs.Tween.removeTweens(bird)
   doFlap();
-  
 }
+
   const ticker = createjs.Ticker
   ticker.setFPS(60); 
   ticker.addEventListener('tick', (event) => {
     
   if (alive) {
-
 
     ground.x -= 3;
     if (ground.x <= groundImg.width * -1) {
@@ -137,7 +162,14 @@ function startGame() {
       
     }
 
-    for (var i = 0; i < pipes.children.length; i++) {
+    for (let j = 0; j < pipes.children.length; j++) {
+      if (j % 2 === 0 && pipes.children[j].x < centerX && pipes.children[j].x > centerX - 5) {
+        score += 1
+        scoreText.text = score.toString();
+      }
+    }
+
+    for (let i = 0; i < pipes.children.length; i++) {
         if (i % 2 === 0) {
           collision = checkLowerCollision(bird, pipes.children[i])
         }
@@ -145,12 +177,12 @@ function startGame() {
           collision = checkTopCollision(bird, pipes.children[i])
         } 
         if (collision) {
-          die(bird);
-        } 
+          die(bird, stage);
+        }   
     }
 
     if (checkGroundCollision(bird,ground)) {
-       die(bird);
+       die(bird, stage);
     } 
 
   } else {
@@ -166,8 +198,15 @@ function startGame() {
 
 }
 
-function renderPipes() {
+function restart(stage, bird) {
+  stage.removeAllChildren();
+  createjs.Tween.removeTweens(bird)
+    bird.gotoAndStop('dead')
+    bird.gotoAndPlay('fly')
+  init();
+}
 
+function renderPipes() {
   pipe1 = new createjs.Bitmap(pipeImg);
   pipe1.x = w + 300;
   pipe1.y = ground.y - groundImg.height
@@ -206,7 +245,7 @@ function randomGap(pipe1, pipe2) {
 
 function checkTopCollision(bird, pipe) {
   if (
-      bird.y < pipe.y &&
+      bird.y - birdHeight < pipe.y &&
       bird.x + birdWidth > pipe.x &&
       bird.x < pipe.x + pipe.image.width
     ) return true;
@@ -227,12 +266,14 @@ function checkGroundCollision(bird, ground) {
   return false;
 }
 
-function die(bird) {
+function die(bird,stage) {
   if (alive === true) {
     alive = false
     createjs.Tween.removeTweens(bird)
     bird.gotoAndStop('fly')
     bird.gotoAndPlay('dead')
+    stage.addChild(reset);
+    stage.update();
   }
 }
 
