@@ -17,6 +17,10 @@ let pipeDelay = 120;
 let collision = false;
 let birdWidth = 92
 let birdHeight = 64
+let alive = true;
+
+window.pipes = pipes
+window.bird = bird
 
 
 
@@ -62,17 +66,14 @@ function startGame() {
     "frames": {"regX": 0, "height": 64, "count": 3, "regY": 0, "width": 92},
     "animations": {
       "fly": [0, 2, "fly", .2],
+      "dead": [1, 1, "dead"],
     },
   });
 
-  
-
-
- 
   let bird = new createjs.Sprite(birdSheet, 'fly');
   bird.name = "bird";
-  // bird.regX = 46;
-  // bird.regY = 32;
+  bird.regX = 46;
+  bird.regY = 32;
 
   let centerX = w/2 - 92/2
   let centerY = 412
@@ -80,7 +81,7 @@ function startGame() {
 
   bird.setTransform(centerX, centerY, 1, 1);
 
-  //tween for initial hover
+  // tween for initial hover
   createjs.Tween.get(bird, {loop:true})
   .to({y:centerY + flyDelta}, 380, createjs.Ease.sineInOut)
   .to({y:centerY}, 380, createjs.Ease.sineInOut);
@@ -107,7 +108,9 @@ function startGame() {
   ticker.setFPS(60); 
   ticker.addEventListener('tick', (event) => {
     
-    
+  if (alive) {
+
+
     ground.x -= 3;
     if (ground.x <= groundImg.width * -1) {
       ground.x = 0
@@ -134,23 +137,25 @@ function startGame() {
       
     }
 
-    // current background image is does not repeat well
-    //  background.x -= 1;
-    // if (background.x <= backgroundImg.width * -1) {
-    //   background.x = 0
-    // }
-
     for (var i = 0; i < pipes.children.length; i++) {
         
-        collision = checkCollision(bird, pipes.children[i])
+        if (i % 2 === 0) {
+        collision = checkLowerCollision(bird, pipes.children[i])
+        }
+        else {
+        collision = checkTopCollision(bird, pipes.children[i])
+        }
         if (collision) {
-          console.log('collision!')
+          die(bird);
         }
     }
+  } else {
+    bird.rotation = 90;
+    if (bird.y + birdWidth < backgroundImg.height) {
+        bird.y += 10;
+    }
+  }
 
-    // if (ndgmr.checkPixelCollision(bird, pipe1)) {
-    //   console.log('collision')
-    // }
 
     stage.update(event);
   })
@@ -162,7 +167,7 @@ function renderPipes() {
   pipe1 = new createjs.Bitmap(pipeImg);
   pipe1.x = w + 300;
   pipe1.y = ground.y - groundImg.height
-
+    
   pipe2 = new createjs.Bitmap(pipeImg);
   pipe2.x = w + 300;
   pipe2.y = pipe1.y - pipeGap
@@ -195,39 +200,48 @@ function randomGap(pipe1, pipe2) {
   pipe2.y = pipe1.y - pipeGap - (h/100);
 }
 
-function checkCollision(bird, pipe) {
+function checkTopCollision(bird, pipe) {
   if (
-      ( bird.y + birdHeight > pipe.y ||
-      bird.y < pipe.y + pipe.image.height) &&
+      bird.y < pipe.y &&
       bird.x + birdWidth > pipe.x &&
       bird.x < pipe.x + pipe.image.width
     ) return true;
   return false;
 }
 
+function checkLowerCollision(bird, pipe) {
+  if (
+      bird.y + birdHeight > pipe.y &&
+      bird.x + birdWidth > pipe.x &&
+      bird.x < pipe.x + pipe.image.width
+    ) return true;
+  return false;
+}
+
+function die(bird) {
+  if (alive === true) {
+    debugger
+    alive = false
+    createjs.Tween.removeTweens(bird)
+    bird.gotoAndStop('fly')
+    bird.gotoAndPlay('dead')
+  }
+}
+
+
+
+
+
+
+
+
+
+
 document.addEventListener('DOMContentLoaded',() => {
   init()
 })
 
 
-//bottom pipes
-// bottom of bird is lower than top of pipe &&
-// birdRightEdge is to right of PipeLeftEdge
-// bird leftedge is to left off piperightedge
-
-/*
-  bird.y + birdHeight > pipe.y &&
-  bird.x + birdWidth > pipe.x &&
-  bird.x < pipe.x + pipe.image.width
-*/
-
-
-/*
-top pipes
-
-topbird is higher than bottom pipe
-
-*/
 
 
 

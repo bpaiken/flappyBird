@@ -104,6 +104,10 @@ var pipeDelay = 120;
 var collision = false;
 var birdWidth = 92;
 var birdHeight = 64;
+var alive = true;
+
+window.pipes = pipes;
+window.bird = bird;
 
 function init() {
   backgroundImg.onload = onImageLoaded;
@@ -144,14 +148,15 @@ function startGame() {
     "images": [birdImg],
     "frames": { "regX": 0, "height": 64, "count": 3, "regY": 0, "width": 92 },
     "animations": {
-      "fly": [0, 2, "fly", .2]
+      "fly": [0, 2, "fly", .2],
+      "dead": [1, 1, "dead"]
     }
   });
 
   var bird = new createjs.Sprite(birdSheet, 'fly');
   bird.name = "bird";
-  // bird.regX = 46;
-  // bird.regY = 32;
+  bird.regX = 46;
+  bird.regY = 32;
 
   var centerX = w / 2 - 92 / 2;
   var centerY = 412;
@@ -159,7 +164,7 @@ function startGame() {
 
   bird.setTransform(centerX, centerY, 1, 1);
 
-  //tween for initial hover
+  // tween for initial hover
   createjs.Tween.get(bird, { loop: true }).to({ y: centerY + flyDelta }, 380, createjs.Ease.sineInOut).to({ y: centerY }, 380, createjs.Ease.sineInOut);
 
   var pipeArr = renderPipes();
@@ -184,47 +189,49 @@ function startGame() {
   ticker.setFPS(60);
   ticker.addEventListener('tick', function (event) {
 
-    ground.x -= 3;
-    if (ground.x <= groundImg.width * -1) {
-      ground.x = 0;
-    }
+    if (alive) {
 
-    bird.y += 10;
-    bird.y -= flap;
-    if (flap > 0) {
-      flap = flap * .9;
-    }
+      ground.x -= 3;
+      if (ground.x <= groundImg.width * -1) {
+        ground.x = 0;
+      }
 
-    pipes.children.forEach(function (pipe) {
-      pipe.x -= 3;
-    });
+      bird.y += 10;
+      bird.y -= flap;
+      if (flap > 0) {
+        flap = flap * .9;
+      }
 
-    for (var _i = 0; _i < pipes.children.length; _i++) {
-      if (_i % 2 === 1) continue;
-      if (pipes.children[_i].x === -pipeImg.width) {
-        randomGap(pipes.children[_i], pipes.children[_i + 1]);
-        pipes.children[_i].x = w + 300;
-        pipes.children[_i + 1].x = w + 300;
+      pipes.children.forEach(function (pipe) {
+        pipe.x -= 3;
+      });
+
+      for (var _i = 0; _i < pipes.children.length; _i++) {
+        if (_i % 2 === 1) continue;
+        if (pipes.children[_i].x === -pipeImg.width) {
+          randomGap(pipes.children[_i], pipes.children[_i + 1]);
+          pipes.children[_i].x = w + 300;
+          pipes.children[_i + 1].x = w + 300;
+        }
+      }
+
+      for (var i = 0; i < pipes.children.length; i++) {
+
+        if (i % 2 === 0) {
+          collision = checkLowerCollision(bird, pipes.children[i]);
+        } else {
+          collision = checkTopCollision(bird, pipes.children[i]);
+        }
+        if (collision) {
+          die(bird);
+        }
+      }
+    } else {
+      bird.rotation = 90;
+      if (bird.y + birdWidth < backgroundImg.height) {
+        bird.y += 10;
       }
     }
-
-    // current background image is does not repeat well
-    //  background.x -= 1;
-    // if (background.x <= backgroundImg.width * -1) {
-    //   background.x = 0
-    // }
-
-    for (var i = 0; i < pipes.children.length; i++) {
-
-      collision = checkCollision(bird, pipes.children[i]);
-      if (collision) {
-        console.log('collision!');
-      }
-    }
-
-    // if (ndgmr.checkPixelCollision(bird, pipe1)) {
-    //   console.log('collision')
-    // }
 
     stage.update(event);
   });
@@ -268,32 +275,29 @@ function randomGap(pipe1, pipe2) {
   pipe2.y = pipe1.y - pipeGap - h / 100;
 }
 
-function checkCollision(bird, pipe) {
-  if ((bird.y + birdHeight > pipe.y || bird.y < pipe.y + pipe.image.height) && bird.x + birdWidth > pipe.x && bird.x < pipe.x + pipe.image.width) return true;
+function checkTopCollision(bird, pipe) {
+  if (bird.y < pipe.y && bird.x + birdWidth > pipe.x && bird.x < pipe.x + pipe.image.width) return true;
   return false;
+}
+
+function checkLowerCollision(bird, pipe) {
+  if (bird.y + birdHeight > pipe.y && bird.x + birdWidth > pipe.x && bird.x < pipe.x + pipe.image.width) return true;
+  return false;
+}
+
+function die(bird) {
+  if (alive === true) {
+    debugger;
+    alive = false;
+    createjs.Tween.removeTweens(bird);
+    bird.gotoAndStop('fly');
+    bird.gotoAndPlay('dead');
+  }
 }
 
 document.addEventListener('DOMContentLoaded', function () {
   init();
 });
-
-//bottom pipes
-// bottom of bird is lower than top of pipe &&
-// birdRightEdge is to right of PipeLeftEdge
-// bird leftedge is to left off piperightedge
-
-/*
-  bird.y + birdHeight > pipe.y &&
-  bird.x + birdWidth > pipe.x &&
-  bird.x < pipe.x + pipe.image.width
-*/
-
-/*
-top pipes
-
-topbird is higher than bottom pipe
-
-*/
 
 // x -------->
 // y
