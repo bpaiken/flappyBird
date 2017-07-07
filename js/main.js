@@ -5,7 +5,7 @@ let birdImg = new Image();
 let groundImg = new Image();
 let pipeImg = new Image();
 
-let stage, bird, ground, background, pipes, newPipes;
+let stage, bird, ground, background, pipes, newPipes, counter, counterOutline, score;
 let pipe1, pipe2, pipe3, pipe4, pipe5, pipe6;
 
 let w = 768;
@@ -66,7 +66,7 @@ function startGame() {
     "frames": {"regX": 0, "height": 64, "count": 3, "regY": 0, "width": 92},
     "animations": {
       "fly": [0, 2, "fly", .2],
-      "dead": [1, 1, "dead"],
+      "dead": [1, 1, "dead" ],
     },
   });
 
@@ -90,8 +90,8 @@ function startGame() {
   pipes = new createjs.Container();
   pipeArr.forEach(pipe => pipes.addChild(pipe));
 
-  stage.addChild(background);
-  stage.addChild(bird, pipes, ground);
+  stage.addChild(background)
+  stage.addChild(bird, pipes, ground, score, counter);
  
 
   function doFlap() {
@@ -138,17 +138,21 @@ function startGame() {
     }
 
     for (var i = 0; i < pipes.children.length; i++) {
-        
         if (i % 2 === 0) {
-        collision = checkLowerCollision(bird, pipes.children[i])
+          collision = checkLowerCollision(bird, pipes.children[i])
         }
         else {
-        collision = checkTopCollision(bird, pipes.children[i])
-        }
+          collision = checkTopCollision(bird, pipes.children[i])
+        } 
         if (collision) {
           die(bird);
-        }
+        } 
     }
+
+    if (checkGroundCollision(bird,ground)) {
+       die(bird);
+    } 
+
   } else {
     bird.rotation = 90;
     if (bird.y + birdWidth < backgroundImg.height) {
@@ -218,9 +222,13 @@ function checkLowerCollision(bird, pipe) {
   return false;
 }
 
+function checkGroundCollision(bird, ground) {
+  if (bird.y + birdHeight >= ground.y) return true;
+  return false;
+}
+
 function die(bird) {
   if (alive === true) {
-    debugger
     alive = false
     createjs.Tween.removeTweens(bird)
     bird.gotoAndStop('fly')

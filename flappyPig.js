@@ -87,7 +87,10 @@ var stage = void 0,
     ground = void 0,
     background = void 0,
     pipes = void 0,
-    newPipes = void 0;
+    newPipes = void 0,
+    counter = void 0,
+    counterOutline = void 0,
+    score = void 0;
 var pipe1 = void 0,
     pipe2 = void 0,
     pipe3 = void 0,
@@ -174,7 +177,7 @@ function startGame() {
   });
 
   stage.addChild(background);
-  stage.addChild(bird, pipes, ground);
+  stage.addChild(bird, pipes, ground, score, counter);
 
   function doFlap() {
     flap = 36;
@@ -216,7 +219,6 @@ function startGame() {
       }
 
       for (var i = 0; i < pipes.children.length; i++) {
-
         if (i % 2 === 0) {
           collision = checkLowerCollision(bird, pipes.children[i]);
         } else {
@@ -225,6 +227,10 @@ function startGame() {
         if (collision) {
           die(bird);
         }
+      }
+
+      if (checkGroundCollision(bird, ground)) {
+        die(bird);
       }
     } else {
       bird.rotation = 90;
@@ -285,9 +291,13 @@ function checkLowerCollision(bird, pipe) {
   return false;
 }
 
+function checkGroundCollision(bird, ground) {
+  if (bird.y + birdHeight >= ground.y) return true;
+  return false;
+}
+
 function die(bird) {
   if (alive === true) {
-    debugger;
     alive = false;
     createjs.Tween.removeTweens(bird);
     bird.gotoAndStop('fly');
