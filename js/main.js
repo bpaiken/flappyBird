@@ -12,7 +12,7 @@ let w = 768;
 let h = 1024;
 let flap = 0;
 let birdRotation = 0;
-let pipeGap = 240;
+let pipeGap = 260;
 let pipeDelay = 120;
 let collision = false;
 let birdWidth = 92
@@ -141,9 +141,8 @@ function startGame() {
     // }
 
     for (var i = 0; i < pipes.children.length; i++) {
-        // collision = ndgmr.checkPixelCollision(bird, pipes,1,true)
-        // collision = bird.hitTest(pipes.children[0])
-        // collision = checkCollision(bird, pipes.children[i])
+        
+        collision = checkCollision(bird, pipes.children[i])
         if (collision) {
           console.log('collision!')
         }
@@ -196,12 +195,12 @@ function randomGap(pipe1, pipe2) {
   pipe2.y = pipe1.y - pipeGap - (h/100);
 }
 
-function checkCollision(sprite, pipe) {
+function checkCollision(bird, pipe) {
   if (
-      sprite.x < pipe.x + pipe.image.width &&
-      sprite.x + birdWidth > pipe.x &&
-      sprite.y < pipe.y + pipe.image.height &&
-      sprite.y + birdHeight > pipe.y
+      ( bird.y + birdHeight > pipe.y ||
+      bird.y < pipe.y + pipe.image.height) &&
+      bird.x + birdWidth > pipe.x &&
+      bird.x < pipe.x + pipe.image.width
     ) return true;
   return false;
 }
@@ -209,3 +208,34 @@ function checkCollision(sprite, pipe) {
 document.addEventListener('DOMContentLoaded',() => {
   init()
 })
+
+
+//bottom pipes
+// bottom of bird is lower than top of pipe &&
+// birdRightEdge is to right of PipeLeftEdge
+// bird leftedge is to left off piperightedge
+
+/*
+  bird.y + birdHeight > pipe.y &&
+  bird.x + birdWidth > pipe.x &&
+  bird.x < pipe.x + pipe.image.width
+*/
+
+
+/*
+top pipes
+
+topbird is higher than bottom pipe
+
+*/
+
+
+
+// x -------->
+// y
+// |
+// |
+// |
+// | 
+// v
+//

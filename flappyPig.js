@@ -99,7 +99,7 @@ var w = 768;
 var h = 1024;
 var flap = 0;
 var birdRotation = 0;
-var pipeGap = 240;
+var pipeGap = 260;
 var pipeDelay = 120;
 var collision = false;
 var birdWidth = 92;
@@ -215,9 +215,8 @@ function startGame() {
     // }
 
     for (var i = 0; i < pipes.children.length; i++) {
-      // collision = ndgmr.checkPixelCollision(bird, pipes,1,true)
-      // collision = bird.hitTest(pipes.children[0])
-      // collision = checkCollision(bird, pipes.children[i])
+
+      collision = checkCollision(bird, pipes.children[i]);
       if (collision) {
         console.log('collision!');
       }
@@ -269,14 +268,41 @@ function randomGap(pipe1, pipe2) {
   pipe2.y = pipe1.y - pipeGap - h / 100;
 }
 
-function checkCollision(sprite, pipe) {
-  if (sprite.x < pipe.x + pipe.image.width && sprite.x + birdWidth > pipe.x && sprite.y < pipe.y + pipe.image.height && sprite.y + birdHeight > pipe.y) return true;
+function checkCollision(bird, pipe) {
+  if ((bird.y + birdHeight > pipe.y || bird.y < pipe.y + pipe.image.height) && bird.x + birdWidth > pipe.x && bird.x < pipe.x + pipe.image.width) return true;
   return false;
 }
 
 document.addEventListener('DOMContentLoaded', function () {
   init();
 });
+
+//bottom pipes
+// bottom of bird is lower than top of pipe &&
+// birdRightEdge is to right of PipeLeftEdge
+// bird leftedge is to left off piperightedge
+
+/*
+  bird.y + birdHeight > pipe.y &&
+  bird.x + birdWidth > pipe.x &&
+  bird.x < pipe.x + pipe.image.width
+*/
+
+/*
+top pipes
+
+topbird is higher than bottom pipe
+
+*/
+
+// x -------->
+// y
+// |
+// |
+// |
+// | 
+// v
+//
 
 /***/ }),
 /* 1 */
