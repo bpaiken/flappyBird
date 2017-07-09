@@ -90,7 +90,9 @@ var stage = void 0,
     pipes = void 0,
     newPipes = void 0,
     scoreText = void 0;
-var reset = void 0;
+var reset = void 0,
+    startText = void 0,
+    instructions = void 0;
 var pipe1 = void 0,
     pipe2 = void 0,
     pipe3 = void 0,
@@ -102,12 +104,13 @@ var w = 768;
 var h = 1024;
 var flap = 0;
 var birdRotation = 0;
-var pipeGap = 260;
+var pipeGap = 230;
 var pipeDelay = 120;
 var collision = false;
 var birdWidth = 40;
 var birdHeight = 32;
 var alive = true;
+var gameStarted = false;
 var score = 0;
 var centerX = w / 2 - 92 / 2;
 var centerY = 412;
@@ -203,26 +206,41 @@ function buildPipes() {
 }
 
 function buildScore() {
-  scoreText = new createjs.Text("0", "bold 56px 'Press Start 2P'", "#DAA520");
+  scoreText = new createjs.Text("0", "bold 56px 'Press Start 2P'", "#a0522d");
   scoreText.x = centerX;
   scoreText.y = 100;
+}
+
+function buildStart() {
+  startText = new createjs.Text("Press Space to Flap", "62px 'VT323'", "	#a0522d");
+  startText.x = 130;
+  startText.y = 500;
+  instructions = new createjs.Text("Avoid Pipes", "62px 'VT323'", "	#a0522d");
+  instructions.x = 230;
+  instructions.y = 575;
 }
 
 function setStage() {
   stage.addChild(background);
   stage.addChild(pipes, bird, ground);
-  stage.addChild(scoreText);
+  stage.addChild(scoreText, startText, instructions);
   stage.update();
 }
 
 function doFlap() {
-  flap = 36;
+  flap = 31;
 }
 
 document.onkeydown = handleKeyDown;
 function handleKeyDown(e) {
-  createjs.Tween.removeTweens(bird);
-  doFlap();
+  if (e.keyCode === 38 || e.keyCode === 32) {
+    if (gameStarted === false) {
+      gameStarted = true;
+      stage.removeChild(startText, instructions);
+    }
+    createjs.Tween.removeTweens(bird);
+    doFlap();
+  }
 }
 
 function startGame() {
@@ -232,7 +250,8 @@ function startGame() {
   if (!bird) buildBird();
   if (!reset) buildReset();
   if (!pipes) buildPipes();
-  if (!score) buildScore();
+  if (!startText) buildStart();
+  if (!scoreText) buildScore();
   scoreText.text = "0";
   score = 0;
 
@@ -243,9 +262,9 @@ function startGame() {
 }
 
 ticker.addEventListener('tick', function (event) {
-  if (alive) {
+  if (alive && gameStarted) {
 
-    ground.x -= 3;
+    ground.x -= 4;
     if (ground.x <= groundImg.width * -1) {
       ground.x = 0;
     }
@@ -257,12 +276,12 @@ ticker.addEventListener('tick', function (event) {
     }
 
     pipes.children.forEach(function (pipe) {
-      pipe.x -= 3;
+      pipe.x -= 4;
     });
 
     for (var i = 0; i < pipes.children.length; i++) {
       if (i % 2 === 1) continue;
-      if (pipes.children[i].x === -pipeImg.width) {
+      if (pipes.children[i].x <= -pipeImg.width) {
         randomGap(pipes.children[i], pipes.children[i + 1]);
         pipes.children[i].x = w + 300;
         pipes.children[i + 1].x = w + 300;
@@ -290,12 +309,18 @@ ticker.addEventListener('tick', function (event) {
     if (checkGroundCollision(bird, ground)) {
       die(bird, stage);
     }
-  } else {
+  } else if (gameStarted && !alive) {
     bird.rotation = 90;
     if (bird.y + birdWidth < backgroundImg.height) {
       bird.y += 10;
     }
+  } else if (alive && !gameStarted) {
+    ground.x -= 4;
+    if (ground.x <= groundImg.width * -1) {
+      ground.x = 0;
+    }
   }
+
   stage.update(event);
 });
 
@@ -305,6 +330,7 @@ function restart(stage, bird) {
   bird.gotoAndStop('dead');
   bird.gotoAndPlay('fly');
   alive = true;
+  gameStarted = false;
   placeBird();
   buildPipes();
   startGame();
