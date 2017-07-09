@@ -1,6 +1,10 @@
-# FlappyPig
+# FlappyBird
 
-FlappyPig is a side scroller where you attempt to navigate a flying pig through various obstacles.
+FlappyBird is a side scroller where you attempt to navigate a flying pig through various obstacles.
+
+[FlappyBird Live][live
+
+[live]: https://bpaiken.github.io/flappyPig/
 
 ### MVP
 

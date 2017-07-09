@@ -27121,4 +27121,4 @@ module.exports = __webpack_amd_options__;
 
 /***/ })
 /******/ ]);
-//# sourceMappingURL=flappyPig.js.map
+//# sourceMappingURL=flappyBird.js.map
