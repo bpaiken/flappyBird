@@ -4,7 +4,7 @@ FlappyBird is a side scroller where you attempt to navigate a flying pig through
 
 [FlappyBird Live][live]
 
-[live]: https://bpaiken.github.io/flappyPig/
+[live]: https://bpaiken.github.io/flappyBird/
 
 ### MVP
 
