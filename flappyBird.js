@@ -117,9 +117,6 @@ var centerY = 412;
 var ticker = createjs.Ticker;
 ticker.setFPS(60);
 
-window.pipes = pipes;
-window.bird = bird;
-
 function init() {
   backgroundImg.onload = onImageLoaded;
   backgroundImg.src = 'assets/images/background.png';
@@ -289,7 +286,7 @@ ticker.addEventListener('tick', function (event) {
     }
 
     for (var j = 0; j < pipes.children.length; j++) {
-      if (j % 2 === 0 && pipes.children[j].x < centerX && pipes.children[j].x > centerX - 5) {
+      if (j % 2 === 0 && pipes.children[j].x + pipeImg.width < centerX - birdWidth && pipes.children[j].x + pipeImg.width > centerX - 5 - birdWidth) {
         score += 1;
         scoreText.text = score.toString();
       }

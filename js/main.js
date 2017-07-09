@@ -25,10 +25,7 @@ let score = 0
 let centerX = w/2 - 92/2
 let centerY = 412
 const ticker = createjs.Ticker
-ticker.setFPS(60);
-
-window.pipes = pipes
-window.bird = bird
+ticker.setFPS(60);  
 
 function init() {
   backgroundImg.onload = onImageLoaded;
@@ -197,11 +194,11 @@ function startGame() {
         pipes.children[i].x = w + 300;
         pipes.children[i+1].x = w + 300;
       }
-      
     }
 
     for (let j = 0; j < pipes.children.length; j++) {
-      if (j % 2 === 0 && pipes.children[j].x < centerX && pipes.children[j].x > centerX - 5) {
+      if (j % 2 === 0 && pipes.children[j].x + pipeImg.width  < centerX - birdWidth && 
+      pipes.children[j].x + pipeImg.width > centerX - 5 - birdWidth) {
         score += 1
         scoreText.text = score.toString();
       }
