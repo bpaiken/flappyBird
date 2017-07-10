@@ -5,9 +5,10 @@ let birdImg = new Image();
 let groundImg = new Image();
 let pipeImg = new Image();
 let resetImg = new Image();
+let shareImg = new Image();
 
 let stage, bird, ground, background, pipes, newPipes, scoreText;
-let reset, startText, instructions;
+let reset, share, startText, instructions;
 let pipe1, pipe2, pipe3, pipe4, pipe5, pipe6;
 
 let w = 768;
@@ -29,26 +30,29 @@ ticker.setFPS(60);
 
 function init() {
   backgroundImg.onload = onImageLoaded;
-  backgroundImg.src = 'assets/images/background.png';
+  backgroundImg.src = 'assets/images/background.png'
 
   groundImg.onload = onImageLoaded;
-  groundImg.src = 'assets/images/ground.png';
+  groundImg.src = 'assets/images/ground.png'
 
   pipeImg.onload = onImageLoaded;
   pipeImg.src = 'assets/images/pipe.png'
 
   birdImg.onload = onImageLoaded;
-  birdImg.src = 'assets/images/bird.png';
+  birdImg.src = 'assets/images/bird.png'
 
   resetImg.onload = onImageLoaded
   resetImg.src = 'assets/images/reset.png'
+
+  shareImg.onload = onImageLoaded
+  shareImg.src = 'assets/images/share.png'
 }
 
 
 function onImageLoaded(e) {
   numberOfImagesLoaded++;
 
-  if (numberOfImagesLoaded === 5) {
+  if (numberOfImagesLoaded === 6) {
     numberOfImagesLoaded = 0
     startGame();
   }
@@ -96,7 +100,7 @@ function buildReset() {
   reset.scaleX = 0.75
   reset.x = (w / 2) - (resetImg.width / 2 * .75)
   reset.y = (h / 2) - (resetImg.height / 2 * .75)
-  reset.addEventListener('click', restart.bind(null, stage, bird))
+  reset.addEventListener('click', restart)
 
   var hit = new createjs.Shape();
   hit.graphics.beginFill("#000").drawRect(0, 0, resetImg.width, resetImg.width)
@@ -104,6 +108,23 @@ function buildReset() {
   hit.scaleY = 0.75
   reset.hitArea = hit
 }
+
+function buildShare() {
+  share = new createjs.Shape();
+  share.graphics.beginBitmapFill(shareImg).drawRect(0, 0, shareImg.width, shareImg.height);
+  share.scaleY = 0.75
+  share.scaleX = 0.75
+  share.x = (w / 2) - (shareImg.width / 2 * .75)
+  share.y = (h / 2) - (shareImg.height / 2 * .75) + 100
+  share.addEventListener('click', twitterShare)
+
+  var hit = new createjs.Shape();
+  hit.graphics.beginFill("#000").drawRect(0, 0, shareImg.width, shareImg.width)
+  hit.scaleX = 0.75
+  hit.scaleY = 0.75
+  share.hitArea = hit
+}
+
 
 function buildPipes() {
   let pipeArr = renderPipes()
@@ -118,7 +139,7 @@ function buildScore() {
 }
 
 function buildStart() {
-  startText = new createjs.Text("Press Space to Flap", "62px 'VT323'", "	#a0522d")
+  startText = new createjs.Text("Press Space to Flap", "62px 'VT323'", "#a0522d")
   startText.x = 130
   startText.y = 500
   instructions = new createjs.Text("Avoid Pipes", "62px 'VT323'", "	#a0522d")
@@ -155,6 +176,7 @@ function startGame() {
   if (!ground) buildGround()
   if (!bird) buildBird()
   if (!reset) buildReset()
+  if (!share) buildShare()
   if (!pipes) buildPipes()
   if (!startText) buildStart()
   if (!scoreText) buildScore()
@@ -210,10 +232,10 @@ function startGame() {
         }
         else {
           collision = checkTopCollision(bird, pipes.children[i])
-        } 
+        }
         if (collision) {
           die(bird, stage);
-        }   
+        }
     }
 
     if (checkGroundCollision(bird,ground)) {
@@ -235,7 +257,7 @@ function startGame() {
     stage.update(event);
   })
 
-function restart(stage, bird) {
+function restart() {
   stage.removeAllChildren();
   createjs.Tween.removeTweens(bird)
   bird.gotoAndStop('dead')
@@ -245,6 +267,10 @@ function restart(stage, bird) {
   placeBird()
   buildPipes()
   startGame()
+}
+
+function twitterShare() {
+  window.open(`https://twitter.com/share?url=https%3A%2F%2Fbpaiken.github.io%2FflappyBird%2F&text=I scored ${score} on Flappy Bird!.`);
 }
 
 function randomGap(pipe1, pipe2) {
@@ -311,7 +337,7 @@ function die(bird,stage) {
     createjs.Tween.removeTweens(bird)
     bird.gotoAndStop('fly')
     bird.gotoAndPlay('dead')
-    stage.addChild(reset);
+    stage.addChild(reset, share);
     stage.update();
   }
 }
