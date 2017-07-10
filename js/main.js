@@ -1,14 +1,15 @@
-import * as createjs from 'createjs-module';
-let numberOfImagesLoaded = 0;
-let backgroundImg = new Image();
-let birdImg = new Image();
-let groundImg = new Image();
+import * as createjs from 'createjs-module'
+let numberOfImagesLoaded = 0
+let backgroundImg = new Image()
+let birdImg = new Image()
+let groundImg = new Image()
 let pipeImg = new Image();
-let resetImg = new Image();
-let shareImg = new Image();
+let resetImg = new Image()
+let shareImg = new Image()
+let logoImg = new Image()
 
 let stage, bird, ground, background, pipes, newPipes, scoreText;
-let reset, share, startText, instructions;
+let reset, share, startText, logo, instructions;
 let pipe1, pipe2, pipe3, pipe4, pipe5, pipe6;
 
 let w = 768;
@@ -46,13 +47,16 @@ function init() {
 
   shareImg.onload = onImageLoaded
   shareImg.src = 'assets/images/share.png'
+
+  logoImg.onload = onImageLoaded
+  logoImg.src = 'assets/images/logo.png'
 }
 
 
 function onImageLoaded(e) {
   numberOfImagesLoaded++;
 
-  if (numberOfImagesLoaded === 6) {
+  if (numberOfImagesLoaded === 7) {
     numberOfImagesLoaded = 0
     startGame();
   }
@@ -91,6 +95,15 @@ function placeBird() {
   bird.setTransform(centerX, centerY, 1, 1);
   bird.regX = 46;
   bird.regY = 32;
+}
+
+function buildLogo () {
+  logo = new createjs.Shape()
+  logo.graphics.beginBitmapFill(logoImg).drawRect(0,0, logoImg.width, logoImg.height - 2)
+  logo.scaleX = 0.5
+  logo.scaleY = 0.5
+  logo.x = 120
+  logo.y = 50
 }
 
 function buildReset() {
@@ -150,7 +163,7 @@ function buildStart() {
 function setStage() {
   stage.addChild(background)
   stage.addChild(pipes, bird, ground);
-  stage.addChild(scoreText, startText, instructions);
+  stage.addChild(scoreText, logo, startText, logo, instructions);
   stage.update();
 }
 
@@ -163,7 +176,7 @@ function handleKeyDown(e) {
   if (e.keyCode === 38 || e.keyCode === 32) {
     if (gameStarted === false) {
       gameStarted = true;
-      stage.removeChild(startText, instructions)
+      stage.removeChild(startText, instructions, logo)
     } 
   createjs.Tween.removeTweens(bird)
   doFlap();
@@ -179,6 +192,7 @@ function startGame() {
   if (!share) buildShare()
   if (!pipes) buildPipes()
   if (!startText) buildStart()
+  if (!logo) buildLogo()
   if (!scoreText) buildScore()
   scoreText.text = "0"
   score = 0

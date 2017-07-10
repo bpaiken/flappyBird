@@ -83,6 +83,7 @@ var groundImg = new Image();
 var pipeImg = new Image();
 var resetImg = new Image();
 var shareImg = new Image();
+var logoImg = new Image();
 
 var stage = void 0,
     bird = void 0,
@@ -94,6 +95,7 @@ var stage = void 0,
 var reset = void 0,
     share = void 0,
     startText = void 0,
+    logo = void 0,
     instructions = void 0;
 var pipe1 = void 0,
     pipe2 = void 0,
@@ -137,12 +139,15 @@ function init() {
 
   shareImg.onload = onImageLoaded;
   shareImg.src = 'assets/images/share.png';
+
+  logoImg.onload = onImageLoaded;
+  logoImg.src = 'assets/images/logo.png';
 }
 
 function onImageLoaded(e) {
   numberOfImagesLoaded++;
 
-  if (numberOfImagesLoaded === 6) {
+  if (numberOfImagesLoaded === 7) {
     numberOfImagesLoaded = 0;
     startGame();
   }
@@ -181,6 +186,15 @@ function placeBird() {
   bird.setTransform(centerX, centerY, 1, 1);
   bird.regX = 46;
   bird.regY = 32;
+}
+
+function buildLogo() {
+  logo = new createjs.Shape();
+  logo.graphics.beginBitmapFill(logoImg).drawRect(0, 0, logoImg.width, logoImg.height - 2);
+  logo.scaleX = 0.5;
+  logo.scaleY = 0.5;
+  logo.x = 120;
+  logo.y = 50;
 }
 
 function buildReset() {
@@ -241,7 +255,7 @@ function buildStart() {
 function setStage() {
   stage.addChild(background);
   stage.addChild(pipes, bird, ground);
-  stage.addChild(scoreText, startText, instructions);
+  stage.addChild(scoreText, logo, startText, logo, instructions);
   stage.update();
 }
 
@@ -254,7 +268,7 @@ function handleKeyDown(e) {
   if (e.keyCode === 38 || e.keyCode === 32) {
     if (gameStarted === false) {
       gameStarted = true;
-      stage.removeChild(startText, instructions);
+      stage.removeChild(startText, instructions, logo);
     }
     createjs.Tween.removeTweens(bird);
     doFlap();
@@ -270,6 +284,7 @@ function startGame() {
   if (!share) buildShare();
   if (!pipes) buildPipes();
   if (!startText) buildStart();
+  if (!logo) buildLogo();
   if (!scoreText) buildScore();
   scoreText.text = "0";
   score = 0;
