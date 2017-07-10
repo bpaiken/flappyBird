@@ -1,8 +1,7 @@
-import * as createjs from 'createjs-module'
 let numberOfImagesLoaded = 0
 let backgroundImg = new Image()
 let birdImg = new Image()
-let groundImg = new Image()
+let groundImg = new Image() 
 let pipeImg = new Image();
 let resetImg = new Image()
 let shareImg = new Image()
@@ -51,7 +50,6 @@ function init() {
   logoImg.onload = onImageLoaded
   logoImg.src = 'assets/images/logo.png'
 }
-
 
 function onImageLoaded(e) {
   numberOfImagesLoaded++;
