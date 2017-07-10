@@ -41,3 +41,15 @@ table {
 	border-collapse: collapse;
 	border-spacing: 0;
 }
+
+a {
+  color: #898989;
+  text-decoration: none;
+  cursor: pointer;  
+}
+
+a:hover 
+{
+  color: #2C2F33; 
+  text-decoration:none; 
+}

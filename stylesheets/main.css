@@ -19,10 +19,10 @@ canvas {
 .social-links > a {
   width: 180px;
   height: 60px;
-  margin: 10px 0;
+  margin: 10px 0 10px 40px;
 }
 
-#github-img {
+/*.fa-github {
   width: 160px;
   height: auto;
   margin-left: 40px;
@@ -30,17 +30,18 @@ canvas {
 
 #linkedin-img {
   width: 115px;
-  margin-left: 64px;
+  margin-left: 54px;
+  padding: 10px;
 }
 
 #email {
   margin-left: 80px;
-}
+}*/
 
 #github-img:hover {
-  width: 170px;
+  border-bottom: 1px solid black;
 }
 
 #linkedin-img:hover {
-  width: 125px;
+  border-bottom: 1px solid black;
 }
