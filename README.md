@@ -1,44 +1,22 @@
 # FlappyBird
 
-FlappyBird is a side scroller where you attempt to navigate a flying pig through various obstacles.
+FlappyBird is a side scroller where you attempt to navigate a flappy bird through pipes.  
 
 [FlappyBird Live][live]
 
-[live]: https://bpaiken.github.io/flappyBird/
-
-### MVP
-
-* Score: Score will be displayed to the user in the form of a timer
-
-* Start, pause, reset.
-
-* Menu or modal with game controls
-
-* Production README
-
-* (Bonus): Saving scores via backend database
-
-### Wireframe
-
-![alt text](https://github.com/bpaiken/whenPigsFly/blob/master/assets/images/wireframe.png)
+[live]: https://bpaiken.github.io/flappyBird
 
 ### Architecture and Technologies
 
-* JavaScript: game logic
+* HTML Canvas: Rendering images and animation
 
-* Webpack: bundle js files
+* CreateJS
+	- EaselJS: A JavaScript library that makes working with the HTML5 Canvas a little less painful.
+	- TweenJS: A JavaScript library for tweening and animating HTML5 and JavaScript properties. 
 
-* HTML Canvas: rendering images
+* Webpack w/ Babel: Transpiling ES6 to ES5 in order to use latest JavaScript language features.
 
-* Easel JS: rendering library for canvas
+### Future for Project
 
-
-### Timeline
-
-* Day 1:
-	- Research how to make a javascript game without phaser.
-	- Research how to use easel js
-* Day 2:
-	- Build the structure and logic of the game
-* Day 3:
-	- Render images
+* Add the ability to save highscore to a database
+* Make mobile-friendly, add touchpad event handler.
