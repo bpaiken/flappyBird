@@ -46,7 +46,7 @@ function init() {
 
   shareImg.onload = onImageLoaded
   shareImg.src = 'assets/images/share.png'
-
+this[key] =  
   logoImg.onload = onImageLoaded
   logoImg.src = 'assets/images/logo.png'
 }
@@ -135,7 +135,7 @@ function buildShare() {
   hit.scaleY = 0.75
   share.hitArea = hit
 }
-
+++
 
 function buildPipes() {
   let pipeArr = renderPipes()
